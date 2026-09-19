@@ -1,12 +1,22 @@
+import os
+
 from fastapi import FastAPI, HTTPException
 
-app = FastAPI(title="API Calculator")
+APP_VERSION = os.getenv("APP_VERSION", "dev")
+
+app = FastAPI(
+    title="API Calculator",
+    version=APP_VERSION
+)
 
 
 @app.get("/")
 def home():
     return {"message": "API Calculator is running"}
 
+@app.get("/version")
+def version():
+    return {"version": APP_VERSION}
 
 @app.get("/add")
 def add(a: float, b: float):
