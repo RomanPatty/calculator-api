@@ -1,4 +1,4 @@
-name: Calculator CI
+name: Calculator CI Security
 
 on:
   push:
@@ -6,7 +6,9 @@ on:
       - main
 
 jobs:
+
   build:
+    name: Build Calculator
     runs-on: ubuntu-latest
 
     steps:
@@ -33,3 +35,45 @@ jobs:
             --build-arg APP_VERSION=1.0.${{ github.run_number }} \
             -t calculator-api:1.0.${{ github.run_number }} \
             .
+
+
+  semgrep:
+    name: Semgrep Security Scan
+    runs-on: ubuntu-latest
+
+    container:
+      image: semgrep/semgrep
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep
+        run: |
+          semgrep scan --config auto
+
+
+  trivy:
+    name: Trivy Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg APP_VERSION=1.0.${{ github.run_number }} \
+            -t calculator-api:1.0.${{ github.run_number }} \
+            .
+
+      - name: Run Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: calculator-api:1.0.${{ github.run_number }}
+          format: table
+          exit-code: "0"
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: HIGH,CRITICAL
