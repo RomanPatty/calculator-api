@@ -22,6 +22,7 @@ API-калькулятор, разработанный на Python с испол
 
 ```powershell
 py -3.13 -m uvicorn main:app --reload
+```
 
 ## CI Pipeline
 
