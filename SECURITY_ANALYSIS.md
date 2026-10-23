@@ -15,9 +15,7 @@
 
 ## 2. Архитектура CI после доработки
 
-Первоначально pipeline выполнялся на GitHub-hosted Ubuntu runner.
-
-После замечания преподавателя был настроен Windows self-hosted runner.
+pipeline выполняется на GitHub-hosted Windows self-hosted runner.
 
 Текущая схема:
 
